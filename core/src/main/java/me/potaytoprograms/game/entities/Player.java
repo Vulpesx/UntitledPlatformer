@@ -2,7 +2,9 @@ package me.potaytoprograms.game.entities;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
@@ -11,8 +13,10 @@ import me.potaytoprograms.api.scene.Renderable;
 import me.potaytoprograms.api.scene.Updateable;
 import me.potaytoprograms.api.util.Box2DUtil;
 import me.potaytoprograms.api.util.RaycastRenderer;
+import me.potaytoprograms.api.util.RenderUtil;
 import me.potaytoprograms.game.Constants;
-import me.potaytoprograms.game.Game;
+import me.potaytoprograms.api.Game;
+import me.potaytoprograms.api.render.*;
 
 public class Player implements Updateable, Renderable, Disposable {
 
@@ -23,7 +27,7 @@ public class Player implements Updateable, Renderable, Disposable {
 
     private final Vector2 velocity;
     private final float SPEED = 25;
-    private final float ACCEL = 2;
+    private final float ACCEL = 5f;
     private final float JUMP_POWER = 20;
     private final float JUMP_MULTI = 0.4f;
     private final float GRAVITY = -0.98f;
@@ -42,6 +46,10 @@ public class Player implements Updateable, Renderable, Disposable {
     private float width;
     private float height;
 
+    private final AnimationManager anim;
+
+    Texture img = new Texture("blacknwhite.png");
+
     public Player(float x, float y, World world, RaycastRenderer rayRenderer){
         this.world = world;
         this.rayRenderer = rayRenderer;
@@ -59,6 +67,11 @@ public class Player implements Updateable, Renderable, Disposable {
                 .mask(Constants.WORLD)
                 .fixedRotation(true)
                 .type(BodyDef.BodyType.DynamicBody));
+
+        anim = new AnimationManager("run", new Animation(5, position, new Animation.AnimDef()
+                .scale(2f / Game.PPM, 2f / Game.PPM)
+                .offset(-0.1f, 0f),
+                RenderUtil.getRegions(new TextureRegion(img), 3 * 12, 0,12, 12, 2, 1)));
     }
 
     @Override
@@ -68,7 +81,7 @@ public class Player implements Updateable, Renderable, Disposable {
         if((onFloor && velocity.y <= 0)) velocity.y = GRAVITY;
         else velocity.y += GRAVITY;
         if(onWall && velocity.y == 0 && (Gdx.input.isKeyPressed(Input.Keys.RIGHT) || Gdx.input.isKeyPressed(Input.Keys.LEFT))){
-            velocity.y = GRAVITY * 2;
+            velocity.y = GRAVITY / 2;
             velocity.x = 0.01f * wallDir;
         }
 
@@ -77,23 +90,34 @@ public class Player implements Updateable, Renderable, Disposable {
             dashCount = 2;
         }
 
-        if(Gdx.input.isKeyPressed(Input.Keys.LEFT)  && !Gdx.input.isKeyPressed(Input.Keys.DOWN))
+        if(Gdx.input.isKeyPressed(Input.Keys.LEFT)  && !Gdx.input.isKeyPressed(Input.Keys.DOWN)){
             velocity.x -= ACCEL;
-        else if(Gdx.input.isKeyPressed(Input.Keys.RIGHT) && !Gdx.input.isKeyPressed(Input.Keys.DOWN))
+            anim.getCurrAnim().flip = true;
+            anim.getCurrAnim().play = true;
+        }
+
+        else if(Gdx.input.isKeyPressed(Input.Keys.RIGHT) && !Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
             velocity.x += ACCEL;
-        else if(Gdx.input.isKeyPressed(Input.Keys.DOWN))
+            anim.getCurrAnim().flip = false;
+            anim.getCurrAnim().play = true;
+        }
+        else if(Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
             velocity.x *= 0.98f;
+            anim.getCurrAnim().play = false;
+        }
         else{
             velocity.x *= 0.9f;
+            anim.getCurrAnim().play = false;
         }
 
         if(Gdx.input.isKeyJustPressed(Input.Keys.SPACE) && dashCount > 0){
+            if(onWall) velocity.x = -velocity.x;
             velocity.x *= 100;
             dashCount--;
         }
 
         if(Gdx.input.isKeyJustPressed(Input.Keys.UP) && jumpCount > 0){
-            if(onWall) velocity.x = 50 * wallDir;
+            if(onWall && !onFloor) velocity.x = 50 * wallDir;
             velocity.y = JUMP_POWER;
             jumpCount--;
         }
@@ -103,6 +127,7 @@ public class Player implements Updateable, Renderable, Disposable {
             velocity.x = MathUtils.clamp(velocity.x, -SPEED, SPEED);
 
         body.setLinearVelocity(velocity);
+        anim.update(delta);
     }
 
     private void updateVars(){
@@ -150,11 +175,13 @@ public class Player implements Updateable, Renderable, Disposable {
 
     @Override
     public void render(SpriteBatch batch) {
-        
+        batch.begin();
+        anim.render(batch);
+        batch.end();
     }
 
     @Override
     public void dispose() {
-        
+
     }
 }

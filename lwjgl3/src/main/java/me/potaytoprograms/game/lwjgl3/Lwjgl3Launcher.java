@@ -2,7 +2,7 @@ package me.potaytoprograms.game.lwjgl3;
 
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
-import me.potaytoprograms.game.Game;
+import me.potaytoprograms.api.Game;
 import me.potaytoprograms.game.Platformer;
 
 /** Launches the desktop (LWJGL3) application. */

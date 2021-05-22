@@ -7,4 +7,5 @@ dependencies {
 	api "com.badlogicgames.gdx:gdx-box2d:$gdxVersion"
 	api "com.crashinvaders.vfx:gdx-vfx-core:$gdxVfxCoreVersion"
 	api "com.crashinvaders.vfx:gdx-vfx-effects:$gdxVfxEffectsVersion"
+    implementation 'org.jetbrains:annotations:20.1.0'
 }

@@ -1,4 +1,4 @@
-package me.potaytoprograms.game;
+package me.potaytoprograms.api;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -13,11 +13,11 @@ import java.util.HashMap;
 
 public class Game implements Disposable {
 
-    public static final int WIDTH = 800;
-    public static final int HEIGHT = 480;
-    public static final String TITLE = "Untitled Platformer";
-    public static final String VERSION = "INDEV";
-    public static final int PPM = 16;
+    public static int WIDTH = 800;
+    public static int HEIGHT = 480;
+    public static String TITLE = "Game";
+    public static String VERSION = "INDEV";
+    public static int PPM = 16;
 
     public static SceneManager sceneManager;
     public static EventManager eventManager;

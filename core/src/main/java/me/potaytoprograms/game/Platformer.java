@@ -3,11 +3,9 @@ package me.potaytoprograms.game;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
-import me.potaytoprograms.api.event.EventHandler;
+import me.potaytoprograms.api.Game;
 import me.potaytoprograms.api.scene.Scene;
 import me.potaytoprograms.game.scenes.GameScene;
-
-import java.util.HashMap;
 
 public class Platformer extends ApplicationAdapter {
 

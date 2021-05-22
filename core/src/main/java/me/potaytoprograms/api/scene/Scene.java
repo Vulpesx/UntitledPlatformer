@@ -17,11 +17,9 @@ public abstract class Scene implements Disposable {
     }
 
     public void render(SpriteBatch batch){
-        batch.begin();
         for(int i = 0; i < renderables.size; i++){
             renderables.get(i).render(batch);
         }
-        batch.end();
     }
 
     @Override

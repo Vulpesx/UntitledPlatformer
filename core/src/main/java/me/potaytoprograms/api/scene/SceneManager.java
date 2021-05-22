@@ -74,8 +74,8 @@ public class SceneManager {
     public void setScenes(Scene[] scenes, int[] uOrder, int[] rOrder){
         dispose(false);
         clearScenes();
-        for(int i = 0; i < scenes.length; i++){
-            addScene(scenes[i]);
+        for (Scene scene : scenes) {
+            addScene(scene);
         }
         updateOrder = uOrder;
         renderOrder = rOrder;

@@ -10,7 +10,7 @@ import me.potaytoprograms.api.scene.Updateable;
 import me.potaytoprograms.api.util.Box2DUtil;
 import me.potaytoprograms.api.util.RaycastRenderer;
 import me.potaytoprograms.game.Constants;
-import me.potaytoprograms.game.Game;
+import me.potaytoprograms.api.Game;
 import me.potaytoprograms.game.entities.Player;
 
 public class GameScene extends Scene {
@@ -27,14 +27,14 @@ public class GameScene extends Scene {
         cam.setToOrtho(false, Game.WIDTH  / Game.PPM, Game.HEIGHT  / Game.PPM);
 
         addToAll(new Player(10,10,Game.world, rayRenderer));
-        
+
         PolygonShape shape = new PolygonShape();
         shape.setAsBox(Game.WIDTH / Game.PPM / 2f, 10f / Game.PPM);
 
         Box2DUtil.createBody(shape, Game.WIDTH/Game.PPM/2f, 0.5f, Game.world, new Box2DUtil.BDef()
         .category(Constants.WORLD)
         .mask(Constants.PLAYER));
-        
+
         shape.setAsBox(10/Game.PPM, Game.HEIGHT/Game.PPM/2);
         Box2DUtil.createBody(shape, Game.WIDTH/Game.PPM, Game.HEIGHT/Game.PPM/2, Game.world, new Box2DUtil.BDef()
         .category(Constants.WORLD)
@@ -43,6 +43,11 @@ public class GameScene extends Scene {
         Box2DUtil.createBody(shape, 0, Game.HEIGHT/Game.PPM/2, Game.world, new Box2DUtil.BDef()
         .category(Constants.WORLD)
         .mask(Constants.PLAYER));
+
+        Box2DUtil.createBody(shape, 0, 0, Game.world, new Box2DUtil.BDef()
+        .category(Constants.WORLD)
+        .mask(Constants.PLAYER));
+        
         shape.dispose();
     }
 
